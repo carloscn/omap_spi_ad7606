@@ -8,12 +8,14 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
-"./src/EMIFAPinmuxSetup.obj" \
+"./src/ad7606.obj" \
 "./src/ad9833.obj" \
-"./src/ads8568.obj" \
+"./src/c6748.obj" \
+"./src/c6748_gpio.obj" \
 "./src/led.obj" \
 "./src/main.obj" \
-"../single_c6748.cmd" \
+"./src/spi0.obj" \
+"../single_core_c6748.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"../startware/Library/Platform/Debug/Platform.lib" \
 -l"../startware/Library/StarterWare/Drivers/Debug/drivers.lib" \
@@ -149,8 +151,8 @@ OMAPL138_SPI_AD7606_STARTWARE_CORE_DSP_CCSV74.out: $(OBJS) $(CMD_SRCS) $(LIB_SRC
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
-	-$(RM) "src/EMIFAPinmuxSetup.obj" "src/ad9833.obj" "src/ads8568.obj" "src/led.obj" "src/main.obj" 
-	-$(RM) "src/EMIFAPinmuxSetup.d" "src/ad9833.d" "src/ads8568.d" "src/led.d" "src/main.d" 
+	-$(RM) "src/ad7606.obj" "src/ad9833.obj" "src/c6748.obj" "src/c6748_gpio.obj" "src/led.obj" "src/main.obj" "src/spi0.obj" 
+	-$(RM) "src/ad7606.d" "src/ad9833.d" "src/c6748.d" "src/c6748_gpio.d" "src/led.d" "src/main.d" "src/spi0.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

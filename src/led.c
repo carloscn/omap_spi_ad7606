@@ -22,22 +22,7 @@
 #include "led.h"
 
 
-void led_gpio_init( void )
 
-{
-    GPIOBank0Pin5PinMuxSetup();
-    GPIOBank0Pin1PinMuxSetup();
-    GPIOBank0Pin2PinMuxSetup();
-
-    GPIODirModeSet(SOC_GPIO_0_REGS, LED1_GPIO_PORT_NUMBER, GPIO_DIR_OUTPUT );
-    GPIODirModeSet(SOC_GPIO_0_REGS, LED2_GPIO_PORT_NUMBER, GPIO_DIR_OUTPUT );
-    GPIODirModeSet(SOC_GPIO_0_REGS, LED3_GPIO_PORT_NUMBER, GPIO_DIR_OUTPUT );
-
-    GPIOPinWrite( SOC_GPIO_0_REGS, LED1_GPIO_PORT_NUMBER, GPIO_PIN_LOW );
-    GPIOPinWrite( SOC_GPIO_0_REGS, LED2_GPIO_PORT_NUMBER, GPIO_PIN_LOW );
-    GPIOPinWrite( SOC_GPIO_0_REGS, LED3_GPIO_PORT_NUMBER, GPIO_PIN_LOW );
-
-}
 
 
 void leds_flash( void )
@@ -46,8 +31,10 @@ void leds_flash( void )
     LED1_ON();
     LED2_ON();
     LED3_ON();
-    for( i = 0; i < 25534; i ++ );
+    LED4_ON();
+    for( i = 0; i < 64534; i ++ );
     LED1_OFF();
     LED2_OFF();
     LED3_OFF();
+    LED4_OFF();
 }

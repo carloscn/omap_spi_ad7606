@@ -20,16 +20,20 @@
 #ifndef INCLUDE_LED_H_
 #define INCLUDE_LED_H_
 
-#define                     LED1_GPIO_PORT_NUMBER               6
-#define                     LED2_GPIO_PORT_NUMBER               2
-#define                     LED3_GPIO_PORT_NUMBER               3
+#define                     LED1_GPIO_NUMBER                    6
+#define                     LED2_GPIO_NUMBER                    1
+#define                     LED3_GPIO_NUMBER                    2
+#define                     LED4_GPIO_NUMBER                    3
 
-#define                     LED1_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED1_GPIO_PORT_NUMBER, GPIO_PIN_HIGH )
-#define                     LED2_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED2_GPIO_PORT_NUMBER, GPIO_PIN_HIGH )
-#define                     LED3_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED3_GPIO_PORT_NUMBER, GPIO_PIN_HIGH )
-#define                     LED1_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED1_GPIO_PORT_NUMBER, GPIO_PIN_LOW )
-#define                     LED2_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED2_GPIO_PORT_NUMBER, GPIO_PIN_LOW )
-#define                     LED3_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED3_GPIO_PORT_NUMBER, GPIO_PIN_LOW )
+#define                     LED1_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED1_GPIO_NUMBER, GPIO_PIN_HIGH )
+#define                     LED2_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED2_GPIO_NUMBER, GPIO_PIN_HIGH )
+#define                     LED3_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED3_GPIO_NUMBER, GPIO_PIN_HIGH )
+#define                     LED4_ON()                             GPIOPinWrite( SOC_GPIO_0_REGS, LED4_GPIO_NUMBER, GPIO_PIN_HIGH )
+
+#define                     LED1_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED1_GPIO_NUMBER, GPIO_PIN_LOW )
+#define                     LED2_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED2_GPIO_NUMBER, GPIO_PIN_LOW )
+#define                     LED3_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED3_GPIO_NUMBER, GPIO_PIN_LOW )
+#define                     LED4_OFF()                            GPIOPinWrite( SOC_GPIO_0_REGS, LED4_GPIO_NUMBER, GPIO_PIN_LOW )
 
 extern void led_gpio_init( void );
 extern void leds_flash( void );
