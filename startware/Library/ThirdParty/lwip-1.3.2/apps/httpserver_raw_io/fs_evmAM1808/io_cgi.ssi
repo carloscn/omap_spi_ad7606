@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<!-- Copyright (c) 2009-2010 Texas Instruments Incorporated.  All rights reserved. -->
+<meta content="text/html;charset=ISO-8869-1" http-equiv="content-type"><title>IO Control Demo</title>
+
+<style type="text/css">
+body
+{
+font-family: Arial;
+background-color: white;
+margin: 10px;
+padding: 0px
+}
+h1
+{
+color: #7C7369;
+font-family: Arial;
+font-size: 24pt;
+font-style: italic;
+}
+h2
+{
+color: #000000;
+font-family: Arial;
+font-size: 18pt;
+font-style: bold;
+}
+h3
+{
+color: #7C7369;
+font-family: Arial;
+font-size: 12pt;
+font-style: bold;
+}
+</style>
+</head>
+
+<!--#FormVars-->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td align="center" height="84" valign="bottom" width="360" ><img alt="Texas Instruments" src="images/ti_logo.gif" height="84" width="360"><br></td>
+<td>
+<td align="center" valign="middle">
+<h1>Sitara<small><sup>&reg;</sup></small> AM18XX Development Kit</h1>
+</td>
+</tr>
+</tbody>
+</table>
+<table width="100%">
+<tbody>
+<tr>
+<td align="left" valign="top" width="25%">
+<br>
+<ul>
+<li> <a href="index.html">About TI</a>
+<br>
+<br>
+</li>
+<li> <a href="http://www.ti.com/sitara">About the Sitara Family</a>
+<br>
+<br>
+</li>
+<li><a href="io_cgi.ssi"> IO Control Demo <br>
+<br>
+</a></li>
+<li><a href="SitaraWareUserGuide.html">UserGuide
+</ul>
+</td>
+<td align="left" valign="top" width="75%">
+<center>
+<h2 align="center">IO Control Demo</h2>
+</center>
+<hr size="2" width="100%">
+<ul>
+</ul>
+This demonstration shows the method of performing control using CGI Handlers.<br>
+<br>
+<br>
+<form method="get" action="io_control.cgi" name="ledtoggle">
+<input name="Update" value="TIMER" type="submit"> <br>
+ When TIMER button is clicked LED on the EVM starts blinking.<br>The rate at which LED blinks varies with time.<br> <br>
+<input name="Update" value="GPIO" type="submit"> <br>
+Insertion/ejection of MMC/SD Card is detected by the system using a GPIO Pin.<br>Appropriate message is printed on the UART console.<br> <br>
+<input name="Update" value="RTC" type="submit">  <br>
+ RTC maintains the current time and date of the system.<br>User should enter valid time and date information which are programmed to RTC registers.<br> <br> 
+<input name="Update" value="I2C" type="submit"> <br>
+When I2C button is clicked LED on the EVM starts blinking.<br>The data to toogle LED is sent through I2C Bus<br> <br>
+</ul>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<br><br>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td align="right" valign="center">
+<h1><br>
+</h1>
+</td>
+<td align="right" valign="center">
+<h3>Copyright &copy; 2010 Texas Instruments Incorporated. All rights
+reserved.</h3>
+</td>
+</tr>
+</tbody>
+</table>
+</body></html>

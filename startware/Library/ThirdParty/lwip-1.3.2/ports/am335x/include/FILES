@@ -1,0 +1,4 @@
+arch/       - Include files for Sitara architecture.
+netif/      - Include files for Sitara network interfaces.
+
+See also the FILES file in each subdirectory.

@@ -1,0 +1,6 @@
+include/    - Include files for Sitara ports.
+netif/      - Network interface drivers for Sitara devices.
+perf.c      - Sitara performance monitor driver file (not used).
+sys_arch.c  - Sitara architecture support file.
+
+See also the FILES file in each subdirectory.

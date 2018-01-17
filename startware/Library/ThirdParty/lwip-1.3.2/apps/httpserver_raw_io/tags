@@ -1,0 +1,186 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ALIGN_PAYLOAD	makefsdata.c	68;"	d	file:
+CHDIR	makefsdata.c	36;"	d	file:
+CHDIR	makefsdata.c	54;"	d	file:
+CONTENT_TYPE	httpd.h	/^CONTENT_TYPE;$/;"	t	typeref:enum:file_type_enum
+CSS	httpd.h	/^  CSS \/* .css *\/$/;"	e	enum:file_type_enum
+DEFAULT_404_HTML	httpd_structs.h	87;"	d
+FINDFIRST_DIR	makefsdata.c	30;"	d	file:
+FINDFIRST_DIR	makefsdata.c	48;"	d	file:
+FINDFIRST_FILE	makefsdata.c	29;"	d	file:
+FINDFIRST_FILE	makefsdata.c	47;"	d	file:
+FINDFIRST_SUCCEEDED	makefsdata.c	32;"	d	file:
+FINDFIRST_SUCCEEDED	makefsdata.c	50;"	d	file:
+FINDNEXT	makefsdata.c	31;"	d	file:
+FINDNEXT	makefsdata.c	49;"	d	file:
+FINDNEXT_SUCCEEDED	makefsdata.c	33;"	d	file:
+FINDNEXT_SUCCEEDED	makefsdata.c	51;"	d	file:
+FIND_RET_T	makefsdata.c	28;"	d	file:
+FIND_RET_T	makefsdata.c	46;"	d	file:
+FIND_T	makefsdata.c	24;"	d	file:
+FIND_T	makefsdata.c	42;"	d	file:
+FIND_T_FILENAME	makefsdata.c	25;"	d	file:
+FIND_T_FILENAME	makefsdata.c	43;"	d	file:
+FIND_T_IS_DIR	makefsdata.c	26;"	d	file:
+FIND_T_IS_DIR	makefsdata.c	44;"	d	file:
+FIND_T_IS_FILE	makefsdata.c	27;"	d	file:
+FIND_T_IS_FILE	makefsdata.c	45;"	d	file:
+FS_NUMFILES	fsdata.c	8557;"	d	file:
+FS_ROOT	fsdata.c	8555;"	d	file:
+GETCWD	makefsdata.c	35;"	d	file:
+GETCWD	makefsdata.c	53;"	d	file:
+GIF	httpd.h	/^  GIF, \/* .gif *\/$/;"	e	enum:file_type_enum
+HEX_BYTES_PER_LINE	makefsdata.c	73;"	d	file:
+HTML	httpd.h	/^  HTML, \/* .htm(l) *\/$/;"	e	enum:file_type_enum
+HTTPD_DEBUG	httpd_io.c	44;"	d	file:
+HTTPD_FILE_IS_VOLATILE	httpd_io.c	73;"	d	file:
+HTTPD_FILE_IS_VOLATILE	httpd_io.c	75;"	d	file:
+HTTPD_MAX_RETRIES	httpd_io.c	62;"	d	file:
+HTTPD_MAX_SEND_LIMIT	httpd_io.c	68;"	d	file:
+HTTPD_POLL_INTERVAL	httpd_io.c	64;"	d	file:
+HTTPD_SERVER_AGENT	httpd_structs.h	8;"	d
+HTTPD_SERVER_PORT	httpd_io.c	57;"	d	file:
+HTTPD_SUPPORT_DYNAMIC_PAGES	fs.h	37;"	d
+HTTPD_TCP_PRIO	httpd_io.c	80;"	d	file:
+HTTPD_TRACK_SENT_BYTES	httpd_io.c	78;"	d	file:
+HTTPD_USE_MAX_SEND_LIMIT	httpd_io.c	70;"	d	file:
+HTTPD_USE_MEM_POOL	httpd_io.c	53;"	d	file:
+HTTP_200_OK	httpd.h	/^  HTTP_200_OK,$/;"	e	enum:getResponseEnum
+HTTP_404_NOT_FOUND	httpd.h	/^  HTTP_404_NOT_FOUND$/;"	e	enum:getResponseEnum
+HTTP_HDR_APP	httpd_structs.h	69;"	d
+HTTP_HDR_BAD_REQUEST	httpd_structs.h	78;"	d
+HTTP_HDR_BAD_REQUEST_11	httpd_structs.h	82;"	d
+HTTP_HDR_BMP	httpd_structs.h	67;"	d
+HTTP_HDR_CONN_CLOSE	httpd_structs.h	85;"	d
+HTTP_HDR_CONTENT_LENGTH	httpd_structs.h	84;"	d
+HTTP_HDR_CSS	httpd_structs.h	72;"	d
+HTTP_HDR_DEFAULT_TYPE	httpd_structs.h	75;"	d
+HTTP_HDR_GIF	httpd_structs.h	64;"	d
+HTTP_HDR_HTML	httpd_structs.h	62;"	d
+HTTP_HDR_ICO	httpd_structs.h	68;"	d
+HTTP_HDR_JPG	httpd_structs.h	66;"	d
+HTTP_HDR_JS	httpd_structs.h	70;"	d
+HTTP_HDR_NOT_FOUND	httpd_structs.h	77;"	d
+HTTP_HDR_NOT_FOUND_11	httpd_structs.h	81;"	d
+HTTP_HDR_NOT_IMPL	httpd_structs.h	79;"	d
+HTTP_HDR_NOT_IMPL_11	httpd_structs.h	83;"	d
+HTTP_HDR_OK	httpd_structs.h	76;"	d
+HTTP_HDR_OK_11	httpd_structs.h	80;"	d
+HTTP_HDR_PNG	httpd_structs.h	65;"	d
+HTTP_HDR_RA	httpd_structs.h	71;"	d
+HTTP_HDR_SERVER	httpd_structs.h	86;"	d
+HTTP_HDR_SSI	httpd_structs.h	63;"	d
+HTTP_HDR_SWF	httpd_structs.h	73;"	d
+HTTP_HDR_XML	httpd_structs.h	74;"	d
+HTTP_RESPONSE	httpd.h	/^} HTTP_RESPONSE;$/;"	t	typeref:enum:getResponseEnum
+JAVASCRIPT	httpd.h	/^  JAVASCRIPT, \/* .js *\/$/;"	e	enum:file_type_enum
+JPEG	httpd.h	/^  JPEG, \/* .jp(e)g *\/$/;"	e	enum:file_type_enum
+LWIP_HTTPD_DYNAMIC_HEADERS	httpd_structs.h	17;"	d
+MAX_CGI_PARAMETERS	httpd.h	127;"	d
+MAX_PATH_LEN	makefsdata.c	75;"	d	file:
+NEWLINE	makefsdata.c	38;"	d	file:
+NUM_HTTP_HEADERS	httpd_structs.h	111;"	d
+OCTET_STREAM	httpd.h	/^  OCTET_STREAM, \/* .bin, .class, ??? *\/$/;"	e	enum:file_type_enum
+PAYLOAD_ALIGNMENT	makefsdata.c	66;"	d	file:
+PAYLOAD_ALIGN_TYPE	makefsdata.c	70;"	d	file:
+PNG	httpd.h	/^  PNG, \/* .png *\/ $/;"	e	enum:file_type_enum
+REALAUDIO	httpd.h	/^  REALAUDIO, \/* .ra(m) *\/$/;"	e	enum:file_type_enum
+TEXT	httpd.h	/^  TEXT, \/* .txt *\/$/;"	e	enum:file_type_enum
+__FSDATA_H__	fsdata.h	33;"	d
+__FS_H__	fs.h	33;"	d
+__HTTPD_H__	httpd.h	33;"	d
+__HTTPD_STRUCTS_H__	httpd_structs.h	2;"	d
+curSubdir	makefsdata.c	/^char curSubdir[MAX_PATH_LEN];$/;"	v
+data	fs.h	/^  const unsigned char *data;$/;"	m	struct:fs_file
+data	fsdata.h	/^  const unsigned char *data;$/;"	m	struct:fsdata_file
+data_404_htm	fsdata.c	/^static const unsigned char data_404_htm[] =$/;"	v	file:
+data_block_htm	fsdata.c	/^static const unsigned char data_block_htm[] =$/;"	v	file:
+data_family_htm	fsdata.c	/^static const unsigned char data_family_htm[] =$/;"	v	file:
+data_favicon_ico	fsdata.c	/^static const unsigned char data_favicon_ico[] =$/;"	v	file:
+data_images_awards08_jpg	fsdata.c	/^static const unsigned char data_images_awards08_jpg[] =$/;"	v	file:
+data_images_chips_jpg	fsdata.c	/^static const unsigned char data_images_chips_jpg[] =$/;"	v	file:
+data_images_lm3s9b96_gif	fsdata.c	/^static const unsigned char data_images_lm3s9b96_gif[] =$/;"	v	file:
+data_images_no16bit_jpg	fsdata.c	/^static const unsigned char data_images_no16bit_jpg[] =$/;"	v	file:
+data_images_no8bit_jpg	fsdata.c	/^static const unsigned char data_images_no8bit_jpg[] =$/;"	v	file:
+data_images_noasm_jpg	fsdata.c	/^static const unsigned char data_images_noasm_jpg[] =$/;"	v	file:
+data_images_ti_logo_gif	fsdata.c	/^static const unsigned char data_images_ti_logo_gif[] =$/;"	v	file:
+data_index_htm	fsdata.c	/^static const unsigned char data_index_htm[] =$/;"	v	file:
+data_io_cgi_ssi	fsdata.c	/^static const unsigned char data_io_cgi_ssi[] =$/;"	v	file:
+data_io_http_htm	fsdata.c	/^static const unsigned char data_io_http_htm[] =$/;"	v	file:
+data_perror_htm	fsdata.c	/^static const unsigned char data_perror_htm[] =$/;"	v	file:
+extension	httpd_structs.h	/^  const char *extension;$/;"	m	struct:__anon2
+extract_uri_parameters	httpd_io.c	/^extract_uri_parameters(struct http_state *hs, char *params)$/;"	f	file:
+file	httpd_io.c	/^  const unsigned char *file;$/;"	m	struct:http_state	file:
+file_404_htm	fsdata.c	/^const struct fsdata_file file_404_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_block_htm	fsdata.c	/^const struct fsdata_file file_block_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_family_htm	fsdata.c	/^const struct fsdata_file file_family_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_favicon_ico	fsdata.c	/^const struct fsdata_file file_favicon_ico[] =$/;"	v	typeref:struct:fsdata_file
+file_images_awards08_jpg	fsdata.c	/^const struct fsdata_file file_images_awards08_jpg[] =$/;"	v	typeref:struct:fsdata_file
+file_images_chips_jpg	fsdata.c	/^const struct fsdata_file file_images_chips_jpg[] =$/;"	v	typeref:struct:fsdata_file
+file_images_lm3s9b96_gif	fsdata.c	/^const struct fsdata_file file_images_lm3s9b96_gif[] =$/;"	v	typeref:struct:fsdata_file
+file_images_no16bit_jpg	fsdata.c	/^const struct fsdata_file file_images_no16bit_jpg[] =$/;"	v	typeref:struct:fsdata_file
+file_images_no8bit_jpg	fsdata.c	/^const struct fsdata_file file_images_no8bit_jpg[] =$/;"	v	typeref:struct:fsdata_file
+file_images_noasm_jpg	fsdata.c	/^const struct fsdata_file file_images_noasm_jpg[] =$/;"	v	typeref:struct:fsdata_file
+file_images_ti_logo_gif	fsdata.c	/^const struct fsdata_file file_images_ti_logo_gif[] =$/;"	v	typeref:struct:fsdata_file
+file_index_htm	fsdata.c	/^const struct fsdata_file file_index_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_io_cgi_ssi	fsdata.c	/^const struct fsdata_file file_io_cgi_ssi[] =$/;"	v	typeref:struct:fsdata_file
+file_io_http_htm	fsdata.c	/^const struct fsdata_file file_io_http_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_orig	httpd_io.c	/^  const unsigned char *file_orig;$/;"	m	struct:http_state	file:
+file_perror_htm	fsdata.c	/^const struct fsdata_file file_perror_htm[] =$/;"	v	typeref:struct:fsdata_file
+file_put_ascii	makefsdata.c	/^int file_put_ascii(FILE *file, const char* ascii_string, int len, int *i)$/;"	f
+file_size	httpd_io.c	/^  u32_t file_size;$/;"	m	struct:http_state	file:
+file_type_enum	httpd.h	/^typedef enum file_type_enum$/;"	g
+file_write_http_header	makefsdata.c	/^int file_write_http_header(FILE *data_file, const char *filename, int file_size)$/;"	f
+fs_file	fs.h	/^struct fs_file {$/;"	s
+fs_open	fs.c	/^fs_open(const char *name, struct fs_file *file)$/;"	f
+fsdata_file	fsdata.h	/^struct fsdata_file {$/;"	s
+g_iNumCGIs	httpd_io.c	/^int g_iNumCGIs = 0;$/;"	v
+g_pCGIs	httpd_io.c	/^const tCGI *g_pCGIs = 0;$/;"	v
+g_psHTTPHeaderStrings	httpd_structs.h	/^static const char *g_psHTTPHeaderStrings[] =$/;"	v
+g_psHTTPHeaders	httpd_structs.h	/^static tHTTPHeader g_psHTTPHeaders[] =$/;"	v
+getResponseEnum	httpd.h	/^typedef enum getResponseEnum$/;"	g
+get_file_size	makefsdata.c	/^int get_file_size(const char* filename)$/;"	f
+headerIndex	httpd_structs.h	/^  int headerIndex;$/;"	m	struct:__anon2
+http_accept	httpd_io.c	/^http_accept(void *arg, struct tcp_pcb *pcb, err_t err)$/;"	f	file:
+http_close_conn	httpd_io.c	/^http_close_conn(struct tcp_pcb *pcb, struct http_state *hs)$/;"	f	file:
+http_err	httpd_io.c	/^http_err(void *arg, err_t err)$/;"	f	file:
+http_parse_request	httpd_io.c	/^http_parse_request(struct pbuf *p, struct http_state *hs)$/;"	f	file:
+http_poll	httpd_io.c	/^http_poll(void *arg, struct tcp_pcb *pcb)$/;"	f	file:
+http_recv	httpd_io.c	/^http_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)$/;"	f	file:
+http_send_data	httpd_io.c	/^http_send_data(struct tcp_pcb *pcb, struct http_state *hs)$/;"	f	file:
+http_sent	httpd_io.c	/^http_sent(void *arg, struct tcp_pcb *pcb, u16_t len)$/;"	f	file:
+http_set_cgi_handlers	httpd_io.c	/^http_set_cgi_handlers(const tCGI *pCGIs, int iNumHandlers)$/;"	f
+http_state	httpd_io.c	/^struct http_state {$/;"	s	file:
+http_state_alloc	httpd_io.c	/^http_state_alloc()$/;"	f	file:
+http_state_free	httpd_io.c	/^http_state_free(struct http_state *hs)$/;"	f	file:
+httpd_init	httpd_io.c	/^httpd_init(void)$/;"	f
+includeHttpHeader	makefsdata.c	/^unsigned char includeHttpHeader = 1;$/;"	v
+includes_http_header	fs.h	/^  u8_t includes_http_header;$/;"	m	struct:fs_file
+lastFileVar	makefsdata.c	/^char lastFileVar[MAX_PATH_LEN];$/;"	v
+left	httpd_io.c	/^  s32_t left;$/;"	m	struct:http_state	file:
+len	fs.h	/^  int len;$/;"	m	struct:fs_file
+len	fsdata.h	/^  const int len;$/;"	m	struct:fsdata_file
+main	makefsdata.c	/^int main(int argc, char *argv[])$/;"	f
+name	fsdata.h	/^  const unsigned char *name;$/;"	m	struct:fsdata_file
+next	fsdata.h	/^  const struct fsdata_file *next;$/;"	m	struct:fsdata_file	typeref:struct:fsdata_file::fsdata_file
+param_vals	httpd_io.c	/^  char *param_vals[MAX_CGI_PARAMETERS]; \/* Values for each extracted param *\/$/;"	m	struct:http_state	file:
+params	httpd_io.c	/^  char *params[MAX_CGI_PARAMETERS];\/* params extracted from the request of URI *\/$/;"	m	struct:http_state	file:
+payload_alingment_dummy_counter	makefsdata.c	/^static int payload_alingment_dummy_counter = 0;$/;"	v	file:
+pcCGIName	httpd.h	/^    const char *pcCGIName;$/;"	m	struct:__anon1
+pfnCGIHandler	httpd.h	/^    tCGIHandler pfnCGIHandler;$/;"	m	struct:__anon1
+processSubs	makefsdata.c	/^unsigned char processSubs = 1;$/;"	v
+process_file	makefsdata.c	/^int process_file(FILE *data_file, FILE *struct_file, const char *filename)$/;"	f
+process_sub	makefsdata.c	/^int process_sub(FILE *data_file, FILE *struct_file)$/;"	f
+retries	httpd_io.c	/^  u8_t retries;$/;"	m	struct:http_state	file:
+sent_total	httpd_io.c	/^  u32_t sent_total;$/;"	m	struct:http_state	file:
+serverID	makefsdata.c	/^const char *serverID =$/;"	v
+tCGI	httpd.h	/^} tCGI;$/;"	t	typeref:struct:__anon1
+tCGIHandler	httpd.h	/^typedef char *(*tCGIHandler)(int iIndex, int iNumParams, char *pcParam[],$/;"	t
+tHTTPHeader	httpd_structs.h	/^} tHTTPHeader;$/;"	t	typeref:struct:__anon2
+u8_t	makefsdata.c	/^typedef unsigned char u8_t;$/;"	t	file:
+useHttp11	makefsdata.c	/^unsigned char useHttp11 = 0;$/;"	v
