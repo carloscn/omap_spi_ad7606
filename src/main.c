@@ -18,100 +18,195 @@
 /*                                                            MULTIBEANS.   */
 /****************************************************************************/
 
-
-// all_channel_datas.ch_data.channal_0
-// J3
-// P1( SPI0_CLK )                   RD
-// P3( SPI0_SOMI )                  DB7
-// P5( SPI0_SIMO )                  DB15( please ensure)
-// P7( SPI0_EN )                    CS
-
-// P2( GPIO_8_2 )                   OS0
-// P4( GPIO_8_1 )                   OS1
-// P6( GPIO_1_7 )                   OS2
-// P8( GPIO_1_6 )                   RAGE
-
-
-// J4
-// P1( GPIO_1_14 )                  CVA
-// P3( GPIO_1_13 )                  CVB
-// P5( GPIO_8_7 )                   RST
-// P7( GPIO_1_12 )                  BUSY
-// P9( GPIO_1_11 )                  FIRST
+/**
+ * \brief   This document configures the trigger level type for which an
+ *          interrupt is required to occur.
+ *
+ * \param   baseAdd    The memory address of the GPIO instance being used.
+ *
+ * \param   pinNumber  The serial number of the GPIO pin.
+ *                     The 144 GPIO pins have serial numbers from 1 to 144.
+ *
+ * \param   intType    This specifies the trigger level type. This can take
+ *                     one of the following four values:
+ *                     1> GPIO_INT_TYPE_NOEDGE, to not generate any interrupts.
+ *                     2> GPIO_INT_TYPE_FALLEDGE, to generate an interrupt on
+ *                        the falling edge of a signal on that pin.
+ *                     3> GPIO_INT_TYPE_RISEDGE, to generate an interrupt on the
+ *                        rising edge of a signal on that pin.
+ *                     4> GPIO_INT_TYPE_BOTHEDGE, to generate interrupts on both
+ *                        rising and falling edges of a signal on that pin.
+ *
+ * \return   None.
+ *
+ * \License  Configuring the trigger level type for generating interrupts is not
+ *           enough for the GPIO module to generate interrupts. The user should
+ *           also enable the interrupt generation capability for the bank to which
+ *           the pin belongs to. Use the function GPIOBankIntEnable() to do the same.
+ */
 
 #include "global.h"
 #include "main.h"
 
-              // DSP C6748 ÍâÉè¼Ä´æÆ÷
-bool                    leds_flash_flag = 0;
+#define                     __CONVER                (float)(char)
+bool                   adc_complete_flag    =   0;
+bool                   leds_flash_flag = 0;
 struct ad9833_t        ad9833_dev;
 struct ad7606_t        ad7606_dev;
-
 
 int main( void )
 {
 
-	CacheEnableMAR((unsigned int)0xC0000000, (unsigned int)0x8000000);
-	CacheEnable(L1DCFG_L1DMODE_32K | L1PCFG_L1PMODE_32K | L2CFG_L2MODE_256K);
-	UARTStdioInit();
-	/* Baud rate: 57600 uart2 */
-    UARTPuts("This is uart data.....\r\n", -2);
-    PSCInit();
-    //GPIOBankPinInit();
+    uint16 sample_rate  =   12000;
+    CacheEnableMAR((unsigned int)0xC0000000, (unsigned int)0x8000000);
+    CacheEnable(L1DCFG_L1DMODE_32K | L1PCFG_L1PMODE_32K | L2CFG_L2MODE_256K);
+
+    /*
+     ** The baud rate is 57600 by UART 2
+     */
+    UARTStdioInit();
+    PSC_INIT();
     GPIO_INIT();
-    //init_ad9833( &ad9833_dev );
-    //ad9833_dev.set_wave_para( &ad9833_dev, 100000, 0, SIN );
-    InterruptInit();
-    int j = 0;
-    int i;
-	while(1) {
+    INT_INIT();
 
+    /*
+     ** Device init.
+     */
+    AD9833_INIT( &ad9833_dev );
+    AD7606_INIT( &ad7606_dev );
 
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN5, 1);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN0, 1);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN1, 1);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN2, 1);
-        for( i = 0; i < 65535; i ++ ){
-            for( j = 0; j < 65; j ++);
+    ad7606_dev.set_sample_rate( &ad7606_dev, sample_rate);
+    ad9833_dev.set_wave_para( &ad9833_dev, 100000, 0, SIN );
+
+    TIMER_INIT( ad7606_dev.config.sample_rate );
+    TIMER_INT_INIT();
+
+    while( true ) {
+        // Sample 2500 points flash  once time.
+        if( leds_flash_flag == true ) {
+            leds_flash();
+            leds_flash_flag = false;
         }
-        //leds_flash();
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN5, 0);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN0, 0);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN1, 0);
-        GPIO_setOutput(GPIO_BANK0, GPIO_PIN2, 0);
-        for( i = 0; i < 65535; i ++ ){
-            for( j = 0; j < 65; j ++);
-        }
-	    UARTPuts("LED flash once \n", -2);
-	    if( leds_flash_flag == 1 ) {
+        if( adc_complete_flag == true ) {
 
-	        leds_flash_flag = 0;
-	    }
-	}
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_0][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_0];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_1][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_1];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_2][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_2];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_3][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_3];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_4][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_4];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_5][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_5];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_6][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_6];
+            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_7][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_7];
+
+            ad7606_dev.adc_count ++ ;
+            adc_complete_flag = false;
+
+            if( ad7606_dev.adc_count >= ADC_CYCLE_NUM ) {
+                ad7606_dev.adc_count    =   0;
+                leds_flash_flag     =   1;
+                leds_flash();
+
+            }
+        }
+    }
 }
-
-void TimerIsr(void)
+/**
+ * \brief    This function is TIMTER_ISR
+ *
+ * \offer    Wei Haochen
+ *
+ * \return   None.
+ *
+ * \note     start the ADC conversion timer to complete the sampling rate setting.
+ */
+void TIMER_ISR(void)
 {
     IntEventClear(SYS_INT_T64P2_TINTALL);
     TimerIntStatusClear(SOC_TMR_2_REGS, TMR_INT_TMR12_NON_CAPT_MODE);
-}
 
-void InterruptInit(void)
+    ad7606_dev.start_sample( &ad7606_dev );
+
+    if( ad7606_dev.is_new_data == true && adc_complete_flag == false ) {
+        adc_complete_flag = true;
+        ad7606_dev.is_new_data  =   false;
+    }
+}
+/**
+ * \brief    This function is TIMTER_INIT
+ *
+ * \offer    Wei Haochen
+ *
+ * \return   None.
+ *
+ * \note     no detail
+ */
+void TIMER_INIT(unsigned int period)
 {
-	IntDSPINTCInit();
-	IntGlobalEnable();
+    u32 TMR_PERIOD_MSB32 = 0;
+    TimerConfigure(SOC_TMR_2_REGS, TMR_CFG_64BIT_CLK_INT);
+    TimerPeriodSet(SOC_TMR_2_REGS, TMR_TIMER12, period);
+    TimerPeriodSet(SOC_TMR_2_REGS, TMR_TIMER34, TMR_PERIOD_MSB32);
+    TimerEnable(SOC_TMR_2_REGS, TMR_TIMER12, TMR_ENABLE_CONT);
 }
-
-
-void PSCInit(void)
+/**
+ * \brief    This function is TIMER_INIT_INIT
+ *
+ * \offer    Wei Haochen
+ *
+ * \return   None.
+ *
+ * \note     no detail
+ */
+void TIMER_INT_INIT(void)
+{
+    IntRegister(C674X_MASK_INT5, TIMER_ISR);
+    IntEventMap(C674X_MASK_INT5, SYS_INT_T64P2_TINTALL);
+    IntEnable(C674X_MASK_INT5);
+    TimerIntEnable(SOC_TMR_2_REGS, TMR_INT_TMR12_NON_CAPT_MODE);
+}
+/**
+ * \brief    This function is INT_INIT
+ *
+ * \offer    Wei Haochen
+ *
+ * \return   None.
+ *
+ * \note     no detail
+ */
+void INT_INIT(void)
+{
+    IntDSPINTCInit();
+    IntGlobalEnable();
+}
+/**
+ * \brief    This function is PSC_INIT
+ *
+ * \offer    Wei Haochen
+ *
+ * \return   None.
+ *
+ * \note     no detail
+ */
+void PSC_INIT(void)
 {
     // Enable GPIO set.
+    //PSCModuleControl(SOC_PSC_0_REGS, HW_PSC_SPI0, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
     PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_GPIO, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
-    // Enable EMIFA (ADS8568 connected) set.
-    PSCModuleControl(SOC_PSC_0_REGS, HW_PSC_EMIFA, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
-}
 
-void init_ad9833( struct ad9833_t *dev )
+
+}
+/**
+ * \brief    This function is AD9833 init
+ *
+ * \offer    Wei Haochen
+ *
+ * \param    struct ad9833_t (in ad9833.h document)
+ *
+ * \return   None.
+ *
+ * \note     no detail
+ */
+void AD9833_INIT( struct ad9833_t *dev )
 {
     dev->delay            =   100;
     dev->set_wave_para    =   &ad9833_set_para;
@@ -123,97 +218,160 @@ void init_ad9833( struct ad9833_t *dev )
 
     dev->init_device( dev );
 
-
 }
-
-
 
 /**
- * struct ad7887_chip_info - chip specifc information
- * @int_vref_mv:    the internal reference voltage
- * @channel:        channel specification
+ * \brief    This function is AD7606 init
+ *
+ * \offer    Wei Haochen
+ *
+ * \param    struct ad7606_t (in ad9833.h document)
+ *
+ * \return   None.
+ *
+ * \note     no detail
  */
-
-void GPIO_INIT( void )
+void AD7606_INIT( struct ad7606_t *dev )
 {
-    C6748_pinmuxConfig( 0 , 0x44000000, 0x44000000);
-    C6748_pinmuxConfig( 1 , 0x88888888, 0x88888888);
-    C6748_pinmuxConfig( 2 , 0x44444440, 0x44444440);
-    C6748_pinmuxConfig( 3 , 0x44001111, 0x44001111);
-    C6748_pinmuxConfig( 4 , 0x00220044, 0x00220044);
-
-    GPIO_setDir( GPIO_BANK0, GPIO_PIN5, GPIO_OUTPUT );
-    GPIO_setDir( GPIO_BANK0, GPIO_PIN0, GPIO_OUTPUT );
-    GPIO_setDir( GPIO_BANK0, GPIO_PIN1, GPIO_OUTPUT );
-    GPIO_setDir( GPIO_BANK0, GPIO_PIN2, GPIO_OUTPUT );
-    // P2( GPIO_8_2 )                   OS0
-    // P4( GPIO_8_1 )                   OS1
-    // P6( GPIO_1_7 )                   OS2
-    // P8( GPIO_1_6 )                   RAGE
+    dev->config.over_sample =    OVER_SAMPLE_1;
+    dev->config.range       =    RANGE_10V;
+    dev->config.delay       =    100;
 
 
-    // J4
-    // P1( GPIO_1_14 )                  CVA
-    // P3( GPIO_1_13 )                  CVB
-    // P5( GPIO_8_7 )                   RST
-    // P7( GPIO_1_12 )                  BUSY
-    // P9( GPIO_1_11 )                  FIRST
+    dev->hw.ctrl_line_cva           =   CVA_GPIO_NUMBER;
+    dev->hw.ctrl_line_cvb           =   CVB_GPIO_NUMBER;
+    dev->hw.ctrl_line_os0           =   OS0_GPIO_NUMBER;
+    dev->hw.ctrl_line_os1           =   OS1_GPIO_NUMBER;
+    dev->hw.ctrl_line_os2           =   OS2_GPIO_NUMBER;
+    dev->hw.ctrl_line_range         =   RANGE_GPIO_NUMBER;
+    dev->hw.ctrl_line_reset         =   RESET_GPIO_NUMBER;
+    dev->hw.input_line_firstdata    =   FIRST_GPIO_NUMBER;
+    dev->hw.signal_line_busy        =   BUSY_GPIO_NUMBER;
+    dev->hw.clk                     =   SCLK_GPIO_NUMBER;
+    dev->hw.cs                      =   CS_GPIO_NUMBER;
+    dev->hw.da                      =   DA_GPIO_NUMBER;
+    dev->hw.db                      =   DB_GPIO_NUMBER;
 
+    dev->device_delay               =   &ad7606_delay;
+    dev->set_over_sample            =   &ad7606_set_over_sample;
+    dev->start_converst             =   &ad7606_start_convst;
+    dev->reset                      =   &ad7606_device_reset;
+    dev->device_not_busy            =   &ad7606_device_not_busy;
+    dev->init                       =   &ad7606_device_init;
+    dev->spi_read                   =   &ad7606_spi_read;
+    dev->start_sample               =   &ad7606_read_sample_data;
+    dev->set_sample_rate            =   &ad7606_set_sample;
 
+    dev->is_not_busy                =   dev->device_not_busy( dev );
+    dev->init( dev );
 
-
+    dev->is_new_data                =   false;
 
 }
 
+/**
+ * \brief    This function is AD7606 init
+ *
+ * \offer    Wei Haochen
+ *
+ * \param    struct ad7606_t (in ad9833.h document)
+ *
+ * \return   None.
+ *
+ * \note     // J3
+ * P1( SPI0_CLK /GPIO_1_8 )                       RD
+ * P3( SPI0_SOMI/GPIO_8_6 )                      DB7
+ * P5( SPI0_SIMO/GPIO_8_5 )                        DB8
+ * P8( SPI0_Sn0 /GPIO_1_6 )                       CS
+ * P2( GPIO_8_2 )                   OS0
+ * P4( GPIO_8_1 )                   OS1
+ * P6( GPIO_1_7 )                   OS2
+ * P10( GND )                       RAGE
+ * J4
+ * P1( GPIO_1_14 )                  CVA
+ * P3( GPIO_1_13 )                  CVB
+ * P5( GPIO_8_7 )                   RST
+ * P7( GPIO_1_12 )                  BUSY
+ * P9( GPIO_1_11 )                  FIRST
+ */
 
-void GPIOBankPinInit(void)
+void GPIO_INIT(void)
 {
 
-   // ·¶Î§ 1-144
-   // GPIO0[0] 1
-   // GPIO1[0] 17
-   // GPIO2[0] 33
-   // GPIO3[0] 49
-   // GPIO4[0] 65
-   // GPIO5[0] 81
-   // GPIO6[0] 97
-   // GPIO7[0] 113
-   // GPIO8[0] 129
-#if 0
-    // 1. GPIOs of AD7606 configure.
-    GPIOBank8Pin2PinMuxSetup();
-    GPIOBank8Pin1PinMuxSetup();
-    GPIOBank1Pin7PinMuxSetup();
-    GPIOBank1Pin6PinMuxSetup();
-    GPIOBank1Pin14PinMuxSetup();
-    GPIOBank1Pin13PinMuxSetup();
-    GPIOBank8Pin7PinMuxSetup();
-    GPIOBank1Pin12PinMuxSetup();
-    GPIOBank1Pin11PinMuxSetup();
-#endif
+    C6748_pinmuxConfig( 0 , 0x44000000, 0x44000000);
+    C6748_pinmuxConfig( 1 , 0x88800800, 0x88800800);
+    C6748_pinmuxConfig( 2 , 0x40044440, 0x40044440);
+    C6748_pinmuxConfig( 3 , 0x44444404, 0x44444404);
+    C6748_pinmuxConfig( 4 , 0x00220044, 0x00220044);
+
     GPIODirModeSet( SOC_GPIO_0_REGS , OS0_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , OS1_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , OS2_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , RANGE_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , CVA_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , CVB_GPIO_NUMBER, GPIO_DIR_OUTPUT);
-    GPIODirModeSet( SOC_GPIO_0_REGS , RESET_GPIO_NUMBER, GPIO_DIR_INPUT);
+    GPIODirModeSet( SOC_GPIO_0_REGS , RESET_GPIO_NUMBER, GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , BUSY_GPIO_NUMBER, GPIO_DIR_INPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , FIRST_GPIO_NUMBER, GPIO_DIR_INPUT);
-#if 1
-    // 2. GPIOs of LED configure.
-    GPIOBank0Pin5PinMuxSetup();
-    GPIOBank0Pin0PinMuxSetup();
-    GPIOBank0Pin1PinMuxSetup();
-    GPIOBank0Pin2PinMuxSetup();
-#endif
-
+    GPIODirModeSet( SOC_GPIO_0_REGS , CS_GPIO_NUMBER, GPIO_DIR_OUTPUT);
+    GPIODirModeSet( SOC_GPIO_0_REGS , SCLK_GPIO_NUMBER, GPIO_DIR_OUTPUT);
+    GPIODirModeSet( SOC_GPIO_0_REGS , DA_GPIO_NUMBER, GPIO_DIR_INPUT);
+    GPIODirModeSet( SOC_GPIO_0_REGS , DB_GPIO_NUMBER, GPIO_DIR_INPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED1_GPIO_NUMBER , GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED2_GPIO_NUMBER , GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED3_GPIO_NUMBER , GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED4_GPIO_NUMBER , GPIO_DIR_OUTPUT);
 
-    //3. GPIOs of Other
-
 }
 
+#if 0
+uint16 count = 0;
+extern uint16 spi_data[256];
+extern bool flag;
+uint16 txcount = 0;
+UINT16 mcount = 0;
+void SPIIsr(void)
+{
+
+    unsigned int intCode = 0;
+    IntEventClear(SYS_INT_SPI0_INT);
+    intCode = SPIInterruptVectorGet(SOC_SPI_0_REGS);
+
+    while (intCode) {
+
+
+
+        if(intCode == SPI_RECV_FULL) {
+
+            datass = *( spi_data + count )  = SPIDataReceive(SOC_SPI_0_REGS);
+            //printf("current spi data: %d \n", datass );
+            count ++;
+
+            if( mcount >= 4  ) {
+                mcount = 0;
+                flag = 0;
+                SPIIntDisable(SOC_SPI_0_REGS, SPI_RECV_INT);
+            }
+            if( count >= 255  ) {
+                count =0;
+            }
+            mcount ++;
+        }
+#if 1
+        if(intCode == SPI_TX_BUF_EMPTY)
+        {
+
+            txcount ++;
+            SPITransmitData1(SOC_SPI_0_REGS, *(spi_data + txcount));
+
+            if( mcount >= 4){
+                SPIIntDisable(SOC_SPI_0_REGS, SPI_TRANSMIT_INT);
+                mcount = 0;
+            }
+            if( txcount >= 255  )  txcount = 0;
+        }
+#endif
+        intCode = SPIInterruptVectorGet(SOC_SPI_0_REGS);
+    }
+}
+#endif

@@ -21,10 +21,6 @@
 #include "global.h"
 #include "led.h"
 
-
-
-
-
 void leds_flash( void )
 {
     int i;
@@ -37,4 +33,6 @@ void leds_flash( void )
     LED2_OFF();
     LED3_OFF();
     LED4_OFF();
+
+
 }

@@ -49,7 +49,6 @@ extern "C" {
 
 
 #define GPIO_REVID		(0x0)
-#define GPIO_BINTEN		(0x8)
 #define GPIO_DIR(n)		(0x10 + (0x28 * n))
 #define GPIO_OUT_DATA(n)	(0x14 + (0x28 * n))
 #define GPIO_SET_DATA(n)	(0x18 + (0x28 * n))

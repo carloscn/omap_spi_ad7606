@@ -25,9 +25,10 @@
 #include "interrupt.h"
 #include <string.h>
 
-extern void SPI0Setup(unsigned int csPinNum, unsigned int Charlength);
-extern unsigned int SPI0_ReadWriteByte(unsigned int csPinNum, char csHoldFlag,
-		unsigned int TxData);
-
-
+extern void SPIDataFormatConfig(unsigned int dataFormat);
+extern void InterruptInit(void);
+extern void SPIInterruptInit(void);
+extern void SPIInit(void);
+extern void SPIIsr(void);
+extern void init_spi_0( void );
 #endif /* SPI0_H_ */

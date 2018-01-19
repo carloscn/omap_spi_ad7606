@@ -22,50 +22,14 @@
 #define INCLUDE_MAIN_H_
 
 
-void Delay(volatile unsigned int count);
-void AD8568GPIOInit(void);
-void InterruptInit(void);
-void AD8568Isr(void);
-void GPIOPinMuxSetup(void);
-void PSCInit(void);
-void EMIFAInit(void);
-void AD8568Reset(void);
-void AD8568Start(void);
-void AD8568Init(unsigned int SamplingRate);
-void AD8568_WriteReg(unsigned int value);
+void TIMER_INIT(unsigned int period);
+void TIMER_INT_INIT(void);
+void INT_INIT(void);
+void PSC_INIT(void);
+void AD9833_INIT( struct ad9833_t *dev );
+void AD7606_INIT( struct ad7606_t *dev );
+void GPIO_INIT(void);
 
-// 中断服务函数
-void TimerIsr(void);
-// 定时器 / 计数器初始化
-void TimerInit(unsigned int period);
-// 定时器 / 计数器中断初始化
-void TimerInterruptInit(void);
+extern void C6748_pinmuxConfig(UINT32 in_reg, UINT32 in_mask, UINT32 in_val);
 
-
-
-
-
-extern unsigned int TMR_PERIOD_LSB32;
-extern unsigned int TMR_PERIOD_MSB32;
-
-
-typedef struct {
-
-    struct channel_datas {
-
-        float channal_0[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_1[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_2[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_3[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_4[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_5[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_6[ ONE_CHANNEL_BUFFER_MAX ];
-        float channal_7[ ONE_CHANNEL_BUFFER_MAX ];
-    } ch_data;
-    unsigned int converted_flag;
-    unsigned int adc_count;
-
-} AllChannelData;
-
-extern void init_ad9833( struct ad9833_t *dev );
 #endif /* INCLUDE_MAIN_H_ */

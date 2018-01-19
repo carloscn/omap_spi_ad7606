@@ -19,7 +19,7 @@
 /****************************************************************************/
 #ifndef INCLUDE_GLOBAL_H_
 #define INCLUDE_GLOBAL_H_
-#include "types.h"
+#include "type.h"
 #include "c6748.h"
 #include "c6748_gpio.h"
 #include "TL6748.h"
@@ -32,7 +32,6 @@
 #include "uartStdio.h"
 #include "timer.h"
 #include "dspcache.h"
-#include "type.h"
 #include "ad9833.h"
 #include "led.h"
 #include "ad7606.h"

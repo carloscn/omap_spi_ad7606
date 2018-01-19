@@ -47,6 +47,7 @@
 extern "C" {
 #endif
 
+#if 0
 #define UART_RBR		(0x0)
 #define UART_THR		(0x0)
 #define UART_IER		(0x4)
@@ -63,7 +64,7 @@ extern "C" {
 #define UART_REVID2		(0x2C)
 #define UART_PWREMU_MGMT 	(0x30)
 #define UART_MDR		(0x34)
-
+#endif
 /**************************************************************************\
 * Field Definition Macros
 \**************************************************************************/

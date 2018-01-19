@@ -3,14 +3,14 @@
 
 // J3
 // P1( SPI0_CLK )                   RD
-// P3( SPI0_SOMI )                  DB7
-// P5( SPI0_SIMO )                  DB15( please ensure)
-// P7( SPI0_EN )                    CS
+// P3( SPI0_SOMI )                  DB7			gpio_8_6
+// P5( SPI0_SIMO )                  DB8			gpio_8_5
+// P8( SPI0_Sn0 )                   CS
 
 // P2( GPIO_8_2 )                   OS0
 // P4( GPIO_8_1 )                   OS1
 // P6( GPIO_1_7 )                   OS2
-// P8( GPIO_1_6 )                   RAGE
+// P10( GND ) 	                    RAGE
 
 
 // J4
@@ -19,6 +19,8 @@
 // P5( GPIO_8_7 )                   RST
 // P7( GPIO_1_12 )                  BUSY
 // P9( GPIO_1_11 )                  FIRST
+	
+	
 
     // P2( GPIO_8_2 )                   OS0
     GPIOBank8Pin2PinMuxSetup();
@@ -32,7 +34,7 @@
     // P8( GPIO_1_6 )                   RAGE
     GPIOBank1Pin6PinMuxSetup();
     GPIODirModeSet( SOC_GPIO_0_REGS , 23, GPIO_DIR_OUTPUT);
-
+	
 
     // J4
     // P1( GPIO_1_14 )                  CVA
