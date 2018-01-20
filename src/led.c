@@ -24,6 +24,7 @@
 void leds_flash( void )
 {
     int i;
+    for( i = 0; i < 64534; i ++ );
     LED1_ON();
     LED2_ON();
     LED3_ON();
@@ -33,6 +34,6 @@ void leds_flash( void )
     LED2_OFF();
     LED3_OFF();
     LED4_OFF();
-
+    for( i = 0; i < 64534; i ++ );
 
 }

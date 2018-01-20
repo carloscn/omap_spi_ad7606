@@ -23,7 +23,7 @@
 #include "ad7606.h"
 
 uint32      busy_timeout    =    0;
-
+bool        disable_start_adc_flag      =   false;
 /**
  * \brief    This function is AD7606_delay_struct function.
  *
@@ -35,6 +35,14 @@ uint32      busy_timeout    =    0;
  *
  * \note     Not precise delay
  */
+void    DELAY_US( uint32 us ) {
+    uint16 i;
+    for( i = 0; i < us; i++  ){
+        asm( " NOP" );
+    }
+}
+
+
 void    ad7606_delay( struct ad7606_t *self , uint32 delay_us )
 {
     int i;
@@ -53,17 +61,17 @@ void    ad7606_delay( struct ad7606_t *self , uint32 delay_us )
  *                     ____
  * \note     RESET ___/    \____
  *                    |<-->|
- *                     >50ns
+ *                      1us
  */
 void    ad7606_device_reset( struct ad7606_t *self )
 {
 
     reset_low( self );
-    self->device_delay( self, 40 );
+    asm( " NOP" );
     reset_high( self );
-    self->device_delay( self, 40 );
+    asm( " NOP" );
     reset_low( self );
-    self->device_delay( self, 40 );
+    asm( " NOP" );
 }
 /**
  * \brief    This function is AD7606 start convst
@@ -76,26 +84,19 @@ void    ad7606_device_reset( struct ad7606_t *self )
  *
  *               ____       __________________
  * \note  covst_a    \_____/
- *               ___________         _________
- *        covst_b           \_______/
- *                         |<------->|
- *                           > 0.5ms
+ *               ____       __________________
+ *        covst_b    \_____/
+ *                   |<--->|
+ *                     5us
  */
 void    ad7606_start_convst( struct ad7606_t *self )
 {
     cva_high( self );
     cvb_high( self );
     cva_low( self );
-
-    self->device_delay( self, 20 );             // No details, give 20 us
-    cva_high( self );
-    // Should hold < 500-us
     cvb_low( self );
-    self->device_delay( self, 250 );            // Should hold < 500-us
-    // According AD7606 datasheet, this need hold Tconv = 4.15 us time.
+    cva_high( self );
     cvb_high( self );
-
-
 }
 /**
  * \brief    This function is AD7606 init
@@ -164,20 +165,26 @@ void    ad7606_set_range( struct ad7606_t *self, enum ad7606_enum_range range )
  *           2) wait busy signal.
  *           3) start spi bus read bits acording to the time.
  */
+
 void    ad7606_read_sample_data( struct ad7606_t *self )
 {
 
     busy_timeout = 0;
     // step 1: Start converst
     self->start_converst( self );
+    disable_start_adc_flag      =   true;
     // step 2: wait busy signal.
-    while( self->device_not_busy( self ) == 0 );
+    while( self->device_not_busy( self ) == 0 ) {
+        busy_timeout ++ ;
+        if( busy_timeout >= 465535 ){
+            busy_timeout = 0;
+            self->start_converst( self );
+        }
+    }
     // step 3: spi transfer
-    self->spi_read( self );
+    self->spi_read( self ,0 );
     while( self->device_not_busy( self ) == 1 );
-
-    return;
-
+    disable_start_adc_flag      =   false;
 }
 /**
  * \brief    This function is AD7606 read busy bit.
@@ -196,7 +203,7 @@ bool       ad7606_device_not_busy( struct ad7606_t *self )
 {
     // When the busy signal pin is high level, the ad7606 is avaible.
     // When the busy signal pin is low level, the AD7606 is convsting the sample data.
-    return ( GPIOPinRead( SOC_GPIO_0_REGS , BUSY_GPIO_NUMBER ) ) ?1:0;
+    return ( GPIOPinRead( SOC_GPIO_0_REGS , BUSY_GPIO_NUMBER ) );
 
 }
 
@@ -213,10 +220,16 @@ bool       ad7606_device_not_busy( struct ad7606_t *self )
  */
 void       ad7606_device_init( struct ad7606_t *self )
 {
+    self->adc_count             =       0;
+    self->is_new_data           =       false;
+    self->config.over_sample    =       OVER_SAMPLE_1;
+    self->config.range          =       RANGE_10V;
+    self->config.delay          =       100;
+    self->config.vin            =       3.3;
+    self->is_not_busy           =       false;
+
     self->reset( self );
     self->device_delay( self, 50 );
-    self->adc_count     =   0;
-
 
 }
 /**
@@ -230,48 +243,102 @@ void       ad7606_device_init( struct ad7606_t *self )
  *
  * \note     no detail
  */
-void        ad7606_spi_read( struct ad7606_t *self )
+void        ad7606_spi_read( struct ad7606_t *self, uint16 mode )
 {
     uint16      cha_data = 0, chb_data = 0;
-    uint16    pipe_num, bit_num;
-    if( self->is_new_data == false  ) {
+    uint16      pipe_num, bit_num;
 
-        sclk_high( self );
-        cs_low( self );
 
+    sclk_high( self );
+    cs_low( self );
+
+    if( mode == 0) {
         for( pipe_num = 0; pipe_num < 4; pipe_num ++ ) {
 
             cha_data    =   0;
             chb_data    =   0;
-            for( bit_num = 0; bit_num < 16; bit_num ++  ) {
 
+            for( bit_num = 0; bit_num < 16; bit_num ++  ) {
                 cha_data    <<=     1;
                 chb_data    <<=     1;
+                /*
+                 *  if no delay time , this freq is : fclk  = 0.05MHz
+                 * */
                 sclk_low( self );
-                cha_data    |=   da_read( self )?1:0;
-                chb_data    |=   db_read( self )?1:0;
+                cha_data    |=      (da_read( self ) & 0x0001);             // read it need 6us time
+                chb_data    |=      (db_read( self ) & 0x0001);             // read it nedd 6us time
                 sclk_high( self );
-
             }
-
             *(self->hw.spi_data + pipe_num )       =     cha_data;
             *(self->hw.spi_data + pipe_num + 4)    =     chb_data;
         }
-        cs_high( self );
-        self->is_new_data       =   true;
-    }else{
-        return;
+    }else {
+        for( pipe_num = 0; pipe_num < 8; pipe_num ++ ) {
+            cha_data    =   0;
+            for( bit_num = 0; bit_num < 16; bit_num ++  ) {
+
+                sclk_low( self );
+                cha_data    <<=     1;
+                cha_data    |=   da_read( self );
+                sclk_high( self );
+
+            }
+            *(self->hw.spi_data + pipe_num )       =     cha_data;
+        }
+    }
+    cs_high( self );
+}
+
+
+void        ad7606_save_datas( struct ad7606_t *self ) {
+
+    self->channel.detail.rom_area[ADC_CHANNEL_0][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_0]);
+    self->channel.detail.rom_area[ADC_CHANNEL_1][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_1]);
+    self->channel.detail.rom_area[ADC_CHANNEL_2][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_2]);
+    self->channel.detail.rom_area[ADC_CHANNEL_3][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_3]);
+    self->channel.detail.rom_area[ADC_CHANNEL_4][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_4]);
+    self->channel.detail.rom_area[ADC_CHANNEL_5][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_5]);
+    self->channel.detail.rom_area[ADC_CHANNEL_6][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_6]);
+    self->channel.detail.rom_area[ADC_CHANNEL_7][ self->adc_count ] =    self->quantify_data(  self ,self->hw.spi_data[ADC_CHANNEL_7]);
+
+    self->adc_count ++ ;
+
+    if( self->adc_count >= ADC_CYCLE_NUM ) {
+        self->adc_count    =   0;
     }
 
 }
 
+
 void         ad7606_set_sample( struct ad7606_t *self, u32 sample_rate )
 {
-    if(sample_rate > 510000) sample_rate = 510000;
-    self->config.sample_rate = 228000000/sample_rate;
+
+    self->config.sample_rate = (228000000/(sample_rate*20));
 }
 
+uint16  read_da_line( struct ad7606_t *self )
+{
+    if( da_read( self ) == 1 ) {
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
+float   ad7606_quantify_data( struct ad7606_t *self, uint16 data )
+{
+    float range;
+    float vin;
+    if( self->config.range == RANGE_10V ) {
+        range = 10.0f;
+    }else {
+        range = 5.0f;
+    }
+
+    vin = self->config.vin;
+
+    return ((float)data)*range/32768/(vin/vin);
+}
 
 
 

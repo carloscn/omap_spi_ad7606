@@ -57,7 +57,7 @@
 #define                         sclk_low(self)          (    GPIOPinWrite( SOC_GPIO_0_REGS , self->hw.clk, GPIO_PIN_LOW )  )
 #define                         da_read(self)           GPIOPinRead( (SOC_GPIO_0_REGS ), self->hw.da )
 #define                         db_read(self)           GPIOPinRead( (SOC_GPIO_0_REGS ), self->hw.db )
-#define                         ADC_CYCLE_NUM           2500
+#define                         ADC_CYCLE_NUM           250
 #define                         ADC_CHANNEL_0           0
 #define                         ADC_CHANNEL_1           1
 #define                         ADC_CHANNEL_2           2
@@ -121,6 +121,7 @@ struct ad7606_config_t {
     enum    ad7606_enum_range range;
     u16                 delay;
     u32     sample_rate;
+    float   vin;
 
 };
 
@@ -132,10 +133,11 @@ struct ad7606_t {
     struct ad7606_config_t              config;
     bool    is_not_busy;
     bool    is_new_data;
-    bool    adc_count;
+    uint32    adc_count;
 
+    float   ( *quantify_data )          ( struct ad7606_t *self,    u16 );
     void    ( *init )                   ( struct ad7606_t *self );
-    void    ( *spi_read)                ( struct ad7606_t *self );
+    void    ( *spi_read)                ( struct ad7606_t *self,    u16 mode );
     void    ( *start_converst )         ( struct ad7606_t *self );
     void    ( *reset )                  ( struct ad7606_t *self );
     void    ( *sleep )                  ( struct ad7606_t *self );
@@ -145,18 +147,22 @@ struct ad7606_t {
     void    ( *device_delay )           ( struct ad7606_t *self ,   u32 delay_time );
     void    ( *set_sample_rate )        ( struct ad7606_t *self,    u32 u32_sample_rate );
     void    ( *set_over_sample )        ( struct ad7606_t *self,    enum ad7606_enum_over_sample );
+    void    ( *save_data )              ( struct ad7606_t *self );
 
 };
-
+extern bool    disable_start_adc_flag;
 extern void    ad7606_read_sample_data  ( struct ad7606_t *self );
 extern void    ad7606_start_convst      ( struct ad7606_t *self );
 extern void    ad7606_device_reset      ( struct ad7606_t *self );
 extern bool    ad7606_device_not_busy   ( struct ad7606_t *self );
 extern void    ad7606_device_init       ( struct ad7606_t *self );
-extern void    ad7606_spi_read          ( struct ad7606_t *self );
+extern void    ad7606_spi_read          ( struct ad7606_t *self ,   u16 mode);
 extern void    ad7606_delay             ( struct ad7606_t *self ,   u32 delay_time );
 extern void    ad7606_set_sample        ( struct ad7606_t *self,    u32 sample_rate );
 extern void    ad7606_set_range         ( struct ad7606_t *self,    enum ad7606_enum_range range );
 extern void    ad7606_set_over_sample   ( struct ad7606_t *self,    enum ad7606_enum_over_sample over_sample);
+extern float   ad7606_quantify_data     ( struct ad7606_t *self, uint16 data );
+extern void    DELAY_US( uint32 us );
 
+extern void        ad7606_save_datas( struct ad7606_t *self );
 #endif /* INCLUDE_AD7606_H_ */

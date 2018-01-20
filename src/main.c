@@ -48,23 +48,23 @@
 #include "global.h"
 #include "main.h"
 
-#define                     __CONVER                (float)(char)
 bool                   adc_complete_flag    =   0;
 bool                   leds_flash_flag = 0;
 struct ad9833_t        ad9833_dev;
 struct ad7606_t        ad7606_dev;
-
+void DELAY_US( uint32 us ) ;
 int main( void )
-{
-
-    uint16 sample_rate  =   12000;
+ {
+    /*
+     * Sample Rate:
+     * set value Hz
+     * */
+    u32 sample_rate  =   500;
     CacheEnableMAR((unsigned int)0xC0000000, (unsigned int)0x8000000);
     CacheEnable(L1DCFG_L1DMODE_32K | L1PCFG_L1PMODE_32K | L2CFG_L2MODE_256K);
-
-    /*
-     ** The baud rate is 57600 by UART 2
-     */
     UARTStdioInit();
+    UARTPuts("This is uart data.....\r\n", -2);
+
     PSC_INIT();
     GPIO_INIT();
     INT_INIT();
@@ -77,37 +77,29 @@ int main( void )
 
     ad7606_dev.set_sample_rate( &ad7606_dev, sample_rate);
     ad9833_dev.set_wave_para( &ad9833_dev, 100000, 0, SIN );
-
+    leds_flash();
     TIMER_INIT( ad7606_dev.config.sample_rate );
-    TIMER_INT_INIT();
+   // TIMER_INT_INIT();
 
-    while( true ) {
+    while( 1 ) {
+        ad7606_dev.reset( &ad7606_dev );
+#if 0
+        GPIOPinWrite( SOC_GPIO_0_REGS ,CVA_GPIO_NUMBER, GPIO_PIN_HIGH );
+        DELAY_US(50);
+        GPIOPinWrite( SOC_GPIO_0_REGS ,CVA_GPIO_NUMBER, GPIO_PIN_LOW );
+        DELAY_US(50);
+       // GPIOPinWrite( SOC_GPIO_0_REGS ,CVB_GPIO_NUMBER, GPIO_PIN_HIGH );
+       // GPIOPinWrite( SOC_GPIO_0_REGS ,CVB_GPIO_NUMBER, GPIO_PIN_LOW );
+#endif
+        /*
+        //leds_flash();
+        // ad7606_dev.start_sample( &ad7606_dev );
         // Sample 2500 points flash  once time.
         if( leds_flash_flag == true ) {
             leds_flash();
             leds_flash_flag = false;
         }
-        if( adc_complete_flag == true ) {
-
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_0][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_0];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_1][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_1];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_2][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_2];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_3][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_3];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_4][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_4];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_5][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_5];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_6][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_6];
-            ad7606_dev.channel.detail.rom_area[ADC_CHANNEL_7][ ad7606_dev.adc_count ] = __CONVER ad7606_dev.hw.spi_data[ADC_CHANNEL_7];
-
-            ad7606_dev.adc_count ++ ;
-            adc_complete_flag = false;
-
-            if( ad7606_dev.adc_count >= ADC_CYCLE_NUM ) {
-                ad7606_dev.adc_count    =   0;
-                leds_flash_flag     =   1;
-                leds_flash();
-
-            }
-        }
+        */
     }
 }
 /**
@@ -119,17 +111,19 @@ int main( void )
  *
  * \note     start the ADC conversion timer to complete the sampling rate setting.
  */
+
+
+
+float rom[ ADC_CYCLE_NUM ];
+uint16 count = 0;
 void TIMER_ISR(void)
 {
     IntEventClear(SYS_INT_T64P2_TINTALL);
     TimerIntStatusClear(SOC_TMR_2_REGS, TMR_INT_TMR12_NON_CAPT_MODE);
 
-    ad7606_dev.start_sample( &ad7606_dev );
-
-    if( ad7606_dev.is_new_data == true && adc_complete_flag == false ) {
-        adc_complete_flag = true;
-        ad7606_dev.is_new_data  =   false;
-    }
+   // if( disable_start_adc_flag == false )
+        ad7606_dev.start_sample( &ad7606_dev );
+    ad7606_dev.save_data( &ad7606_dev );
 }
 /**
  * \brief    This function is TIMTER_INIT
@@ -233,10 +227,6 @@ void AD9833_INIT( struct ad9833_t *dev )
  */
 void AD7606_INIT( struct ad7606_t *dev )
 {
-    dev->config.over_sample =    OVER_SAMPLE_1;
-    dev->config.range       =    RANGE_10V;
-    dev->config.delay       =    100;
-
 
     dev->hw.ctrl_line_cva           =   CVA_GPIO_NUMBER;
     dev->hw.ctrl_line_cvb           =   CVB_GPIO_NUMBER;
@@ -261,12 +251,10 @@ void AD7606_INIT( struct ad7606_t *dev )
     dev->spi_read                   =   &ad7606_spi_read;
     dev->start_sample               =   &ad7606_read_sample_data;
     dev->set_sample_rate            =   &ad7606_set_sample;
+    dev->quantify_data              =   &ad7606_quantify_data;
+    dev->save_data                  =   &ad7606_save_datas;
 
-    dev->is_not_busy                =   dev->device_not_busy( dev );
     dev->init( dev );
-
-    dev->is_new_data                =   false;
-
 }
 
 /**
@@ -321,6 +309,13 @@ void GPIO_INIT(void)
     GPIODirModeSet( SOC_GPIO_0_REGS , LED2_GPIO_NUMBER , GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED3_GPIO_NUMBER , GPIO_DIR_OUTPUT);
     GPIODirModeSet( SOC_GPIO_0_REGS , LED4_GPIO_NUMBER , GPIO_DIR_OUTPUT);
+
+    GPIOPinWrite( SOC_GPIO_0_REGS ,RESET_GPIO_NUMBER, GPIO_PIN_LOW );
+    GPIOPinWrite( SOC_GPIO_0_REGS ,CS_GPIO_NUMBER, GPIO_PIN_HIGH );
+    GPIOPinWrite( SOC_GPIO_0_REGS ,CVA_GPIO_NUMBER, GPIO_PIN_HIGH );
+    GPIOPinWrite( SOC_GPIO_0_REGS ,CVB_GPIO_NUMBER, GPIO_PIN_HIGH );
+    GPIOPinWrite( SOC_GPIO_0_REGS ,SCLK_GPIO_NUMBER, GPIO_PIN_HIGH );
+
 
 }
 

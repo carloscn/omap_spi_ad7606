@@ -37,7 +37,7 @@
 #include "ad7606.h"
 #include "spi0.h"
 
-
+#define                     __CONVER                (float)(uint16)
 #define SW_BREAKPOINT     asm(" SWBP 0 ")
 
 
